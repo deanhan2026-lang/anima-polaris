@@ -1,0 +1,47 @@
+# Polaris 个性防漂移系统配置
+version: "1.1"
+
+# 场景标签配置
+scene_tagger:
+  role_keywords_threshold: 0.3
+  emotion_keywords_threshold: 0.2
+
+# 采样配置
+sampler:
+  deep_sample_interval: 20      # 每N轮对话触发一次深度采样
+  light_sample_interval: 3       # 每N轮触发一次浅采样
+  soul_question_count: 5         # 灵魂问题数量
+
+# 检测器配置
+detector:
+  weights:
+    semantic: 0.40
+    lexical: 0.25
+    style: 0.20
+    emotion: 0.15
+  thresholds:
+    green: 0.15
+    gray: 0.25
+    yellow: 0.30
+    red: 0.30
+
+# 判定器配置
+archive:
+  archive_dir: "./polaris_archive"
+  max_records: 1000
+  correction_levels:
+    - level: "light"
+      threshold: 0.20
+    - level: "moderate"
+      threshold: 0.35
+    - level: "strong"
+      threshold: 0.50
+
+# API服务配置
+server:
+  host: "0.0.0.0"
+  port: 5051
+
+logging:
+  level: "INFO"
+  polaris_log: "./polaris.log"

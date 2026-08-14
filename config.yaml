@@ -1,0 +1,17 @@
+# Polaris 防漂移系统 · 根统一配置（P-05：阈值与 detector.py 默认一致 0.15/0.25/0.30）
+version: "1.0"
+
+anti_drift:
+  thresholds:
+    green: 0.15
+    gray: 0.25
+    yellow: 0.30
+    red: 0.30
+
+server:
+  host: "0.0.0.0"
+  port: 5052
+
+logging:
+  level: "INFO"
+  polaris_log: "./polaris.log"

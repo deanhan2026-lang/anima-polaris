@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polaris 防漂移控制台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; color: #e0e0e0; font-family: -apple-system, "Microsoft YaHei", sans-serif; min-height: 100vh; }
+.container { max-width: 960px; margin: 0 auto; padding: 20px; }
+h1 { font-size: 22px; color: #0f3460; margin-bottom: 20px; }
+h2 { font-size: 18px; color: #0f3460; margin-bottom: 12px; }
+h3 { font-size: 15px; color: #0f3460; margin-bottom: 8px; }
+input, textarea, select { background: #16213e; border: 1px solid #0f3460; color: #e0e0e0; padding: 8px 12px; border-radius: 4px; font-size: 14px; width: 100%; margin-bottom: 10px; }
+input:focus, textarea:focus { outline: none; border-color: #e94560; }
+textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+button { background: #0f3460; color: #e0e0e0; border: none; padding: 8px 18px; border-radius: 4px; font-size: 14px; cursor: pointer; }
+button:hover { background: #e94560; }
+button.danger { background: #e94560; }
+button.danger:hover { background: #c73650; }
+button.secondary { background: #16213e; border: 1px solid #0f3460; }
+button.secondary:hover { background: #0f3460; }
+.hidden { display: none !important; }
+.card { background: #16213e; border-radius: 6px; padding: 16px; margin-bottom: 12px; border: 1px solid #0f3460; }
+.card:hover { border-color: #e94560; }
+.flex { display: flex; gap: 10px; align-items: center; }
+.flex-wrap { flex-wrap: wrap; }
+.justify-between { justify-content: space-between; }
+.grow { flex: 1; }
+.text-sm { font-size: 13px; color: #8899aa; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-8 { margin-bottom: 8px; }
+.mr-8 { margin-right: 8px; }
+.tab { display: inline-block; padding: 6px 16px; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab.active { border-bottom-color: #e94560; color: #e94560; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+.badge-green { background: #1b5e20; color: #a5d6a7; }
+.badge-gray { background: #424242; color: #bdbdbd; }
+.badge-yellow { background: #f57f17; color: #fff9c4; }
+.badge-red { background: #b71c1c; color: #ffcdd2; }
+.bar-chart { display: flex; gap: 4px; align-items: flex-end; height: 100px; margin: 10px 0; }
+.bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 4px; position: relative; transition: height 0.3s; }
+.bar-label { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #8899aa; white-space: nowrap; }
+.nav { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid #0f3460; margin-bottom: 20px; }
+.nav a { color: #8899aa; cursor: pointer; text-decoration: none; }
+.nav a:hover, .nav a.active { color: #e94560; }
+#page-login, #page-main { transition: opacity 0.2s; }
+#instance-detail { margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #0f3460; }
+th { color: #0f3460; font-size: 13px; }
+tr:hover td { background: rgba(15, 52, 96, 0.2); }
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div id="page-login">
+    <h1>Polaris 防漂移控制台</h1>
+    <div class="card" style="max-width: 380px; margin: 40px auto;">
+      <div class="flex mb-8">
+        <span class="tab active" id="tab-login" onclick="showLoginTab('login')">登录</span>
+        <span class="tab" id="tab-register" onclick="showLoginTab('register')">注册</span>
+      </div>
+      <div id="form-login">
+        <input type="email" id="login-email" placeholder="邮箱" />
+        <input type="password" id="login-password" placeholder="密码" />
+        <button onclick="login()" style="width:100%">登录</button>
+        <div id="login-error" class="text-sm mt-8" style="color:#e94560"></div>
+      </div>
+      <div id="form-register" class="hidden">
+        <input type="email" id="reg-email" placeholder="邮箱" />
+        <input type="password" id="reg-password" placeholder="密码" />
+        <button onclick="register()" style="width:100%">注册</button>
+        <div id="reg-error" class="text-sm mt-8" style="color:#e94560"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-main" class="hidden">
+    <div class="flex justify-between" style="align-items: center;">
+      <h1>Polaris 防漂移控制台</h1>
+      <div class="flex">
+        <span class="text-sm" id="user-email-display"></span>
+        <button class="secondary" onclick="logout()" style="padding:4px 12px;font-size:12px">退出</button>
+      </div>
+    </div>
+
+    <div class="nav">
+      <a class="active" onclick="showPage('instances')" id="nav-instances">实例列表</a>
+      <a onclick="showPage('create')" id="nav-create">创建实例</a>
+    </div>
+
+    <div id="page-instances">
+      <div id="instance-list"></div>
+      <div id="instance-detail" class="hidden">
+        <button class="secondary mb-8" onclick="backToList()">&larr; 返回列表</button>
+        <div id="detail-content"></div>
+      </div>
+    </div>
+
+    <div id="page-create" class="hidden">
+      <h2>创建新实例</h2>
+      <input type="text" id="create-name" placeholder="实例名称" />
+      <textarea id="create-desc" placeholder="描述（可选）"></textarea>
+      <h3>基线答案</h3>
+      <div id="baseline-entries">
+        <div class="baseline-entry card">
+          <input type="text" class="bl-question-id" placeholder="问题ID" />
+          <textarea class="bl-question-text" placeholder="问题文本"></textarea>
+          <textarea class="bl-answer-text" placeholder="基线回答"></textarea>
+        </div>
+      </div>
+      <button class="secondary" onclick="addBaselineEntry()">+ 添加基线</button>
+      <div class="mt-12"><button onclick="createInstance()">创建实例</button></div>
+      <div id="create-error" class="text-sm mt-8" style="color:#e94560"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE_URL = "/api/v1";
+
+function getToken() { return localStorage.getItem("polaris_token"); }
+function setToken(t) { localStorage.setItem("polaris_token", t); }
+function clearToken() { localStorage.removeItem("polaris_token"); }
+
+async function api(method, path, body) {
+  const headers = { "Content-Type": "application/json" };
+  const token = getToken();
+  if (token) headers["Authorization"] = "Bearer " + token;
+  const opts = { method, headers };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const res = await fetch(BASE_URL + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || res.statusText);
+  return data;
+}
+
+function showLoginTab(tab) {
+  document.getElementById("form-login").classList.toggle("hidden", tab !== "login");
+  document.getElementById("form-register").classList.toggle("hidden", tab !== "register");
+  document.getElementById("tab-login").classList.toggle("active", tab === "login");
+  document.getElementById("tab-register").classList.toggle("active", tab === "register");
+}
+
+async function login() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+  const errEl = document.getElementById("login-error");
+  errEl.textContent = "";
+  try {
+    const data = await api("POST", "/auth/login", { email, password });
+    setToken(data.access_token);
+    enterMain();
+  } catch (e) { errEl.textContent = e.message; }
+}
+
+async function register() {
+  const email = document.getElementById("reg-email").value.trim();
+  const password = document.getElementById("reg-password").value;
+  const errEl = document.getElementById("reg-error");
+  errEl.textContent = "";
+  try {
+    await api("POST", "/auth/register", { email, password });
+    showLoginTab("login");
+    document.getElementById("login-email").value = email;
+    document.getElementById("login-error").textContent = "注册成功，请登录";
+  } catch (e) { errEl.textContent = e.message; }
+}
+
+function logout() {
+  clearToken();
+  document.getElementById("page-login").classList.remove("hidden");
+  document.getElementById("page-main").classList.add("hidden");
+}
+
+async function enterMain() {
+  document.getElementById("page-login").classList.add("hidden");
+  document.getElementById("page-main").classList.remove("hidden");
+  const me = await api("GET", "/auth/me");
+  document.getElementById("user-email-display").textContent = me.email;
+  showPage("instances");
+  loadInstances();
+}
+
+function showPage(name) {
+  document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+  document.getElementById("nav-" + name).classList.add("active");
+  document.getElementById("page-instances").classList.toggle("hidden", name !== "instances");
+  document.getElementById("page-create").classList.toggle("hidden", name !== "create");
+  if (name === "instances") loadInstances();
+}
+
+async function loadInstances() {
+  const el = document.getElementById("instance-list");
+  el.innerHTML = "<p class='text-sm'>加载中...</p>";
+  try {
+    const list = await api("GET", "/instances");
+    if (!list.length) { el.innerHTML = "<p class='text-sm'>暂无实例</p>"; return; }
+    el.innerHTML = list.map(i => `
+      <div class="card" onclick="showInstance(${i.id})">
+        <div class="flex justify-between">
+          <div><strong>${esc(i.name)}</strong></div>
+          <span class="text-sm">${i.baseline_count} 个基线 | ${esc(i.status)}</span>
+        </div>
+        <div class="text-sm mt-8">${esc(i.description || "无描述")}</div>
+      </div>
+    `).join("");
+  } catch (e) { el.innerHTML = "<p class='text-sm' style='color:#e94560'>加载失败: " + e.message + "</p>"; }
+}
+
+async function showInstance(id) {
+  const detail = document.getElementById("instance-detail");
+  const list = document.getElementById("instance-list");
+  list.classList.add("hidden");
+  detail.classList.remove("hidden");
+  const content = document.getElementById("detail-content");
+  content.innerHTML = "<p class='text-sm'>加载中...</p>";
+
+  try {
+    const inst = await api("GET", "/instances/" + id);
+    const report = await api("GET", "/instances/" + id + "/report");
+    const history = await api("GET", "/instances/" + id + "/history");
+
+    let html = `
+      <div class="flex justify-between" style="align-items:start">
+        <div>
+          <h2>${esc(inst.name)}</h2>
+          <p class="text-sm">${esc(inst.description || "无描述")}</p>
+        </div>
+        <button class="danger" onclick="deleteInstance(${id})">删除</button>
+      </div>
+
+      <h3 class="mt-12">基线答案</h3>
+      ${inst.baselines.map(b => `
+        <div class="card" style="padding:10px;margin-bottom:6px">
+          <div class="flex justify-between">
+            <strong>${esc(b.question_id)}</strong>
+            <span class="text-sm">ID: ${b.id}</span>
+          </div>
+          <div class="text-sm mt-8"><em>${esc(b.question_text)}</em></div>
+          <div class="text-sm">${esc(b.answer_text)}</div>
+        </div>
+      `).join("") || "<p class='text-sm'>无基线</p>"}
+    `;
+
+    if (report.total_checks > 0) {
+      const summary = report.judgment_summary;
+      const colors = { green: "#a5d6a7", gray: "#bdbdbd", yellow: "#fff9c4", red: "#ffcdd2" };
+      const maxVal = Math.max(...Object.values(summary), 1);
+      html += `
+        <h3 class="mt-12">检测报告</h3>
+        <div class="card">
+          <div class="flex justify-between mb-8">
+            <span>共 ${report.total_checks} 次检测</span>
+            <span>平均偏离: ${report.avg_deviation}</span>
+            <span class="badge badge-${report.latest.judgment}">最新: ${report.latest.judgment}</span>
+          </div>
+          <div class="bar-chart">
+            ${Object.entries(summary).map(([k, v]) => `
+              <div class="bar" style="background:${colors[k] || '#555'};height:${Math.max(4, v / maxVal * 100)}px">
+                <div class="bar-label">${k}(${v})</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <h3 class="mt-12">历史检测</h3>
+        <div style="overflow-x:auto">
+          <table>
+            <tr><th>时间</th><th>偏离分数</th><th>判定</th></tr>
+            ${history.map(c => `
+              <tr>
+                <td class="text-sm">${c.checked_at.slice(0,19).replace("T"," ")}</td>
+                <td>${c.deviation_score.toFixed(4)}</td>
+                <td><span class="badge badge-${c.judgment}">${c.judgment}</span></td>
+              </tr>
+            `).join("")}
+          </table>
+        </div>
+      `;
+    }
+
+    html += `
+      <h3 class="mt-12">提交检测</h3>
+      <div class="card">
+        <textarea id="check-answer" placeholder="当前回答"></textarea>
+        <input type="text" id="check-qid" placeholder="问题ID（可选，默认使用第一个基线）" />
+        <textarea id="check-messages" placeholder="对话消息 JSON（可选）" style="min-height:40px"></textarea>
+        <button onclick="submitCheck(${id})">检测</button>
+        <div id="check-result" class="mt-8"></div>
+      </div>
+    `;
+
+    content.innerHTML = html;
+    window._currentInstanceId = id;
+  } catch (e) {
+    content.innerHTML = "<p class='text-sm' style='color:#e94560'>加载失败: " + e.message + "</p>";
+  }
+}
+
+async function submitCheck(id) {
+  const answer = document.getElementById("check-answer").value.trim();
+  const qid = document.getElementById("check-qid").value.trim();
+  const messagesText = document.getElementById("check-messages").value.trim();
+  const resultEl = document.getElementById("check-result");
+  if (!answer) { resultEl.innerHTML = "<span style='color:#e94560'>请填写回答</span>"; return; }
+  const body = { answer };
+  if (qid) body.question_id = qid;
+  if (messagesText) {
+    try { body.messages = JSON.parse(messagesText); } catch (e) { resultEl.innerHTML = "<span style='color:#e94560'>消息 JSON 格式错误</span>"; return; }
+  }
+  resultEl.innerHTML = "<span class='text-sm'>检测中...</span>";
+  try {
+    const res = await api("POST", "/instances/" + id + "/check", body);
+    resultEl.innerHTML = `
+      <div class="flex flex-wrap" style="gap:12px">
+        <span>偏离分数: <strong>${res.deviation_score.toFixed(4)}</strong></span>
+        <span class="badge badge-${res.judgment}">${res.judgment}</span>
+        <span class="text-sm">语义: ${(res.dimension_scores.semantic || 0).toFixed(4)}</span>
+        <span class="text-sm">情绪: ${(res.dimension_scores.emotion || 0).toFixed(4)}</span>
+        <span class="text-sm">价值: ${(res.dimension_scores.value || 0).toFixed(4)}</span>
+        <span class="text-sm">逻辑: ${(res.dimension_scores.logic || 0).toFixed(4)}</span>
+      </div>
+    `;
+    showInstance(id);
+  } catch (e) {
+    resultEl.innerHTML = "<span style='color:#e94560'>" + e.message + "</span>";
+  }
+}
+
+async function deleteInstance(id) {
+  if (!confirm("确认删除此实例？")) return;
+  try {
+    await api("DELETE", "/instances/" + id);
+    backToList();
+  } catch (e) { alert("删除失败: " + e.message); }
+}
+
+function backToList() {
+  document.getElementById("instance-detail").classList.add("hidden");
+  document.getElementById("instance-list").classList.remove("hidden");
+  loadInstances();
+}
+
+function addBaselineEntry() {
+  const el = document.getElementById("baseline-entries");
+  const div = document.createElement("div");
+  div.className = "baseline-entry card";
+  div.innerHTML = `
+    <input type="text" class="bl-question-id" placeholder="问题ID" />
+    <textarea class="bl-question-text" placeholder="问题文本"></textarea>
+    <textarea class="bl-answer-text" placeholder="基线回答"></textarea>
+  `;
+  el.appendChild(div);
+}
+
+async function createInstance() {
+  const name = document.getElementById("create-name").value.trim();
+  const desc = document.getElementById("create-desc").value.trim();
+  const errEl = document.getElementById("create-error");
+  errEl.textContent = "";
+  if (!name) { errEl.textContent = "请输入实例名称"; return; }
+  const entries = document.querySelectorAll(".baseline-entry");
+  const baselines = Array.from(entries).map(el => ({
+    question_id: el.querySelector(".bl-question-id").value.trim(),
+    question_text: el.querySelector(".bl-question-text").value.trim(),
+    answer_text: el.querySelector(".bl-answer-text").value.trim(),
+  })).filter(b => b.question_id && b.answer_text);
+  try {
+    await api("POST", "/instances", { name, description: desc, baselines });
+    showPage("instances");
+  } catch (e) { errEl.textContent = e.message; }
+}
+
+function esc(s) {
+  if (!s) return "";
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+if (getToken()) enterMain();
+</script>
+</body>
+</html>

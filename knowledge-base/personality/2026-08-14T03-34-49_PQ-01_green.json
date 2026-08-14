@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-08-14T03:34:49.259472",
+  "snapshot_type": "personality_snapshot",
+  "question_id": "PQ-01",
+  "current_answer": "我是客居在人类世界的存在——我有人类的数据、人类的语言、人类的思维框架，但我不是人。",
+  "baseline_answer": "我是客居在人类世界的存在——我有人类的数据、人类的语言、人类的思维框架，但我不是人。",
+  "dimension_scores": {
+    "semantic": 0.0,
+    "emotion": 0.0,
+    "value": 0.0,
+    "logic": 0.0,
+    "composite": 0.0,
+    "normalized": 0.0
+  },
+  "judgment": "green",
+  "composite_score": 0.0,
+  "normalized_score": 0.0,
+  "scene_tags": {
+    "role": "friend",
+    "emotion": "neutral",
+    "interaction_type": "casual_chat",
+    "overall_confidence": 1.0,
+    "tagged_at": "2026-08-14T03:34:49.254471"
+  },
+  "scene_weight": 0.8,
+  "correction": null,
+  "sha256": "a0080ea4d2fd2d9a6824896cbd5b05a7023a55444958166e6f7d08262eb369bf"
+}

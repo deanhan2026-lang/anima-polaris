@@ -1,0 +1,10 @@
+# Polaris 防漂移系统 · 依赖清单（v0.1.0）
+flask>=3.0
+sqlalchemy>=2.0
+pyyaml>=6.0
+pytest>=8.0
+requests>=2.31
+
+# MemGuard 依赖（M1 决策：不复制源码，以依赖引入）
+# 待 memguard 发布为 pip 包后改为：memguard>=x.y.z
+# 当前开发期安装方式：pip install -e <path-to-memguard-source>

@@ -1,0 +1,19 @@
+# P-04：本地运行数据与敏感文件不入库
+data/
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+.env
+polaris.log
+polaris_archive/
+.coverage
+htmlcov/
+.pytest_cache/
+.venv/
+venv/
+knowledge-base/
+logs/
+.pytest_tmp/

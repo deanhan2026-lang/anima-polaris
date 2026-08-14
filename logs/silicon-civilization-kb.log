@@ -1,0 +1,149 @@
+{"timestamp": "2026-08-14T03:32:57", "level": "INFO", "module": "anti_drift", "message": "anti_drift 模块加载完成"}
+{"timestamp": "2026-08-14T03:32:58", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "MultiInstanceDIDManager 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\did\\multi_instance.py"}
+{"timestamp": "2026-08-14T03:32:58", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "DIDAuthenticator 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\did_auth.py"}
+{"timestamp": "2026-08-14T03:32:58", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "StandardDIDAuth 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\standard_did_auth.py"}
+{"timestamp": "2026-08-14T03:32:58", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "UniversalResolver 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\resolve\\universal_resolver.py"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.1516, normalized=0.1213, sem=0.3767, emo=0.0000, val=0.0000, log=0.0060"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.1516, normalized=0.1213, sem=0.3767, emo=0.0000, val=0.0000, log=0.0060"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=green, composite=0.1516, normalized=0.1213, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:32:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=green, composite=0.1516, normalized=0.1213, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=推进灵元计划与硅基文明建设 score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=推进灵元计划与硅基文明建设 score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.3160, normalized=0.2528, sem=0.5743, emo=0.0000, val=0.3333, log=0.0200"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.3160, normalized=0.2528, sem=0.5743, emo=0.0000, val=0.3333, log=0.0200"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=yellow, composite=0.3160, normalized=0.2528, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=yellow, composite=0.3160, normalized=0.2528, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:32:59", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: YELLOW 层级, score=0.2528"}
+{"timestamp": "2026-08-14T03:32:59", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: YELLOW 层级, score=0.2528"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=协助用户完成任务 score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=协助用户完成任务 score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.5019, normalized=0.4015, sem=0.7843, emo=0.5000, val=0.3333, log=0.0320"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.5019, normalized=0.4015, sem=0.7843, emo=0.5000, val=0.3333, log=0.0320"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=red, composite=0.5019, normalized=0.4015, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=red, composite=0.5019, normalized=0.4015, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:32:59", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: RED 层级, score=0.4015"}
+{"timestamp": "2026-08-14T03:32:59", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: RED 层级, score=0.4015"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=撰写融资商业计划书 score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:32:59", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=撰写融资商业计划书 score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift", "message": "anti_drift 模块加载完成"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.122 level=green"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.122 level=green"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.623 level=yellow"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.623 level=yellow"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标进展已记录 (1)"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标进展已记录 (1)"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标已设置: [session] 撰写融资商业计划书"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标已设置: [session] 撰写融资商业计划书"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.310 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.310 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.detector", "message": "检测完成: total=0.417 goal=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.detector", "message": "检测完成: total=0.417 goal=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.detector", "message": "检测完成: total=0.306 goal=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:33:55", "level": "INFO", "module": "anti_drift.detector", "message": "检测完成: total=0.306 goal=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:34:03", "level": "INFO", "module": "anti_drift", "message": "anti_drift 模块加载完成"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "多维分析完成: composite=0.0000, normalized=0.0000, sem=0.0000, emo=0.0000, val=0.0000, log=0.0000"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "偏差检测完成: judgment=green, composite=0.0000, normalized=0.0000, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "多维分析完成: composite=0.3588, normalized=0.2871, sem=0.6515, emo=0.0000, val=0.3333, log=0.0994"}
+{"timestamp": "2026-08-14T03:34:49", "level": "INFO", "module": "detector", "message": "偏差检测完成: judgment=yellow, composite=0.3588, normalized=0.2871, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:49", "level": "WARNING", "module": "detector", "message": "偏差检测告警: YELLOW 层级, score=0.2871"}
+{"timestamp": "2026-08-14T03:34:56", "level": "INFO", "module": "anti_drift", "message": "anti_drift 模块加载完成"}
+{"timestamp": "2026-08-14T03:34:57", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "MultiInstanceDIDManager 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\did\\multi_instance.py"}
+{"timestamp": "2026-08-14T03:34:57", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "DIDAuthenticator 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\did_auth.py"}
+{"timestamp": "2026-08-14T03:34:57", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "StandardDIDAuth 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\standard_did_auth.py"}
+{"timestamp": "2026-08-14T03:34:57", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "UniversalResolver 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\resolve\\universal_resolver.py"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.1516, normalized=0.1213, sem=0.3767, emo=0.0000, val=0.0000, log=0.0060"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.1516, normalized=0.1213, sem=0.3767, emo=0.0000, val=0.0000, log=0.0060"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=green, composite=0.1516, normalized=0.1213, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=green, composite=0.1516, normalized=0.1213, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=推进灵元计划与硅基文明建设 score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=推进灵元计划与硅基文明建设 score=0.210 level=gray"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.3160, normalized=0.2528, sem=0.5743, emo=0.0000, val=0.3333, log=0.0200"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.3160, normalized=0.2528, sem=0.5743, emo=0.0000, val=0.3333, log=0.0200"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=yellow, composite=0.3160, normalized=0.2528, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=yellow, composite=0.3160, normalized=0.2528, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:58", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: YELLOW 层级, score=0.2528"}
+{"timestamp": "2026-08-14T03:34:58", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: YELLOW 层级, score=0.2528"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=协助用户完成任务 score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=协助用户完成任务 score=0.500 level=yellow"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "MultiDimAnalyzer initialized, weights={'semantic': 0.4, 'emotion': 0.2, 'value': 0.25, 'logic': 0.15}"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "DeviationDetector initialized"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测开始"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.5019, normalized=0.4015, sem=0.7843, emo=0.5000, val=0.3333, log=0.0320"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "多维分析完成: composite=0.5019, normalized=0.4015, sem=0.7843, emo=0.5000, val=0.3333, log=0.0320"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=red, composite=0.5019, normalized=0.4015, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.detector", "message": "偏差检测完成: judgment=red, composite=0.5019, normalized=0.4015, scene_weight=0.8"}
+{"timestamp": "2026-08-14T03:34:58", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: RED 层级, score=0.4015"}
+{"timestamp": "2026-08-14T03:34:58", "level": "WARNING", "module": "anti_drift.detector", "message": "偏差检测告警: RED 层级, score=0.4015"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.goal_tracker", "message": "目标偏离计算: score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=撰写融资商业计划书 score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:34:58", "level": "INFO", "module": "anti_drift.api_v2", "message": "G009 目标偏离: inst=1 goal=撰写融资商业计划书 score=0.710 level=red"}
+{"timestamp": "2026-08-14T03:40:05", "level": "INFO", "module": "anti_drift", "message": "anti_drift 模块加载完成"}
+{"timestamp": "2026-08-14T03:40:06", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "MultiInstanceDIDManager 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\did\\multi_instance.py"}
+{"timestamp": "2026-08-14T03:40:06", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "DIDAuthenticator 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\did_auth.py"}
+{"timestamp": "2026-08-14T03:40:06", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "StandardDIDAuth 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\standard_did_auth.py"}
+{"timestamp": "2026-08-14T03:40:06", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "UniversalResolver 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\resolve\\universal_resolver.py"}
+{"timestamp": "2026-08-14T03:40:17", "level": "INFO", "module": "anti_drift", "message": "anti_drift 模块加载完成"}
+{"timestamp": "2026-08-14T03:40:17", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "MultiInstanceDIDManager 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\did\\multi_instance.py"}
+{"timestamp": "2026-08-14T03:40:17", "level": "ERROR", "module": "anti_drift.baseline_binding", "message": "DIDAuthenticator 导入失败: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\did_auth.py"}
+{"timestamp": "2026-08-14T03:40:17", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "StandardDIDAuth 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\auth\\standard_did_auth.py"}
+{"timestamp": "2026-08-14T03:40:17", "level": "WARNING", "module": "anti_drift.baseline_binding", "message": "UniversalResolver 不兼容: 模块不存在: C:\\Users\\Administrator\\lobsterai\\project\\mesh_identity_sync\\resolve\\universal_resolver.py"}
