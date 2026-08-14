@@ -32,6 +32,7 @@ button.secondary:hover { background: #0f3460; }
 .mt-12 { margin-top: 12px; }
 .mb-8 { margin-bottom: 8px; }
 .mr-8 { margin-right: 8px; }
+.ml-8 { margin-left: 8px; }
 .tab { display: inline-block; padding: 6px 16px; cursor: pointer; border-bottom: 2px solid transparent; }
 .tab.active { border-bottom-color: #e94560; color: #e94560; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
@@ -89,6 +90,7 @@ tr:hover td { background: rgba(15, 52, 96, 0.2); }
     <div class="nav">
       <a class="active" onclick="showPage('instances')" id="nav-instances">实例列表</a>
       <a onclick="showPage('create')" id="nav-create">创建实例</a>
+      <a onclick="showPage('alerts')" id="nav-alerts">告警</a>
     </div>
 
     <div id="page-instances">
@@ -97,6 +99,25 @@ tr:hover td { background: rgba(15, 52, 96, 0.2); }
         <button class="secondary mb-8" onclick="backToList()">&larr; 返回列表</button>
         <div id="detail-content"></div>
       </div>
+    </div>
+
+    <div id="page-alerts" class="hidden">
+      <h2>告警中心</h2>
+      <div class="flex flex-wrap mb-8">
+        <select id="alert-severity" style="width:auto" onchange="loadAlerts()">
+          <option value="">全部级别</option>
+          <option value="yellow">yellow</option>
+          <option value="red">red</option>
+        </select>
+        <select id="alert-status" style="width:auto" onchange="loadAlerts()">
+          <option value="">全部状态</option>
+          <option value="pending">pending</option>
+          <option value="acknowledged">acknowledged</option>
+          <option value="resolved">resolved</option>
+        </select>
+        <button class="secondary" onclick="loadAlerts()" style="padding:4px 12px">刷新</button>
+      </div>
+      <div id="alert-list"></div>
     </div>
 
     <div id="page-create" class="hidden">
@@ -189,7 +210,9 @@ function showPage(name) {
   document.getElementById("nav-" + name).classList.add("active");
   document.getElementById("page-instances").classList.toggle("hidden", name !== "instances");
   document.getElementById("page-create").classList.toggle("hidden", name !== "create");
+  document.getElementById("page-alerts").classList.toggle("hidden", name !== "alerts");
   if (name === "instances") loadInstances();
+  if (name === "alerts") loadAlerts();
 }
 
 async function loadInstances() {
@@ -379,6 +402,59 @@ function esc(s) {
   const d = document.createElement("div");
   d.textContent = s;
   return d.innerHTML;
+}
+
+// ── M2 P-CODE-002：告警中心 ──
+const ALERT_BADGE = {
+  yellow: "badge-yellow",
+  red: "badge-red",
+  pending: "badge-yellow",
+  acknowledged: "badge-gray",
+  resolved: "badge-green",
+};
+
+async function loadAlerts() {
+  const el = document.getElementById("alert-list");
+  el.innerHTML = "<p class='text-sm'>加载中...</p>";
+  const sev = document.getElementById("alert-severity").value;
+  const st = document.getElementById("alert-status").value;
+  const q = new URLSearchParams({ page: "1", size: "50" });
+  if (sev) q.set("severity", sev);
+  if (st) q.set("status", st);
+  try {
+    const data = await api("GET", "/alerts?" + q.toString());
+    if (!data.items.length) { el.innerHTML = "<p class='text-sm'>暂无告警</p>"; return; }
+    el.innerHTML = data.items.map(a => `
+      <div class="card">
+        <div class="flex justify-between">
+          <div>
+            <span class="badge ${ALERT_BADGE[a.severity] || "badge-gray"}">${esc(a.severity)}</span>
+            <span class="badge ${ALERT_BADGE[a.status] || "badge-gray"}">${esc(a.status)}</span>
+            <span class="text-sm ml-8">#${a.id} · 实例 ${a.ai_instance_id}</span>
+          </div>
+          <div class="flex">
+            ${a.status !== "resolved" ? `<button class="secondary" onclick="ackAlert(${a.id})" style="padding:4px 10px;font-size:12px">确认</button>` : ""}
+            ${a.status !== "resolved" ? `<button class="danger" onclick="resolveAlert(${a.id})" style="padding:4px 10px;font-size:12px">关闭</button>` : ""}
+          </div>
+        </div>
+        <div class="mt-8">${esc(a.message || "")}</div>
+        <div class="text-sm mt-8">${a.created_at ? new Date(a.created_at).toLocaleString() : ""}</div>
+        ${a.resolution_note ? `<div class="text-sm mt-8" style="color:#a5d6a7">处理备注: ${esc(a.resolution_note)}</div>` : ""}
+      </div>
+    `).join("");
+  } catch (e) { el.innerHTML = "<p class='text-sm' style='color:#e94560'>加载失败: " + esc(e.message) + "</p>"; }
+}
+
+async function ackAlert(id) {
+  try { await api("POST", `/alerts/${id}/ack`, {}); loadAlerts(); }
+  catch (e) { alert(e.message); }
+}
+
+async function resolveAlert(id) {
+  const note = prompt("处理备注（可选）:", "人工复核通过");
+  if (note === null) return;
+  try { await api("POST", `/alerts/${id}/resolve`, { resolution_note: note }); loadAlerts(); }
+  catch (e) { alert(e.message); }
 }
 
 if (getToken()) enterMain();

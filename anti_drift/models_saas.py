@@ -55,6 +55,7 @@ class Alert(Base):
     severity = Column(String(16), nullable=False, index=True)   # gray / yellow / red
     status = Column(String(16), default="pending", index=True)  # pending / acknowledged / resolved
     message = Column(Text)
+    resolution_note = Column(Text)  # M2 P-CODE-002：处理关闭时记录
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     resolved_at = Column(DateTime, nullable=True)
 

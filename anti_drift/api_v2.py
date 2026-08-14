@@ -4,12 +4,15 @@ Polaris v2 API Blueprint — 路由前缀 /api/v1/
 """
 
 import json
+from datetime import datetime, timezone
 from functools import wraps
 
 from flask import Blueprint, jsonify, request, g
 
 from .db import get_db
 from .models import User, AIInstance, BaselineAnswer, DriftCheck
+from .models_saas import Alert, AlertWebhook  # M2 P-CODE-002：告警
+from .alerting import create_alert, ack_alert, resolve_alert  # M2 P-CODE-002：告警引擎
 from .auth import hash_password, verify_password, create_access_token, decode_access_token
 from .detector import DeviationDetector
 from .scene_tagger import SceneTagger
@@ -290,7 +293,22 @@ def check_drift(inst_id):
     )
     g.db.add(check)
     g.db.commit()
-    return jsonify({
+
+    # M2 P-CODE-002：漂移检测 yellow/red → 自动生成告警（去重，不阻塞主流程）
+    alert_created = False
+    if judg in ("yellow", "red"):
+        try:
+            _, created = create_alert(
+                g.db, inst_id, check.id, judg,
+                message=f"漂移检测 {judg}（score={float(score):.3f}，question={baseline.question_id}）",
+            )
+            g.db.commit()
+            alert_created = created
+        except Exception as e:
+            logger.warning("告警生成失败（不阻塞）: %s", e)
+            g.db.rollback()
+
+    resp = {
         "id": check.id,
         "deviation_score": float(score),
         "judgment": judg,
@@ -300,7 +318,10 @@ def check_drift(inst_id):
         "goal_level": goal_level,
         "goal": goal_text,
         "goal_source": goal_source,
-    })
+    }
+    if judg in ("yellow", "red"):
+        resp["alert_created"] = alert_created
+    return jsonify(resp)
 
 
 @bp.route("/instances/<int:inst_id>/history")
@@ -588,3 +609,177 @@ def export_evidence(inst_id):
             __import__("datetime").timezone.utc
         ).isoformat(),
     })
+
+
+# ========== M2 P-CODE-002: 告警模块 ==========
+
+def _get_owned_alert(alert_id):
+    """获取当前用户拥有的告警（含实例归属校验）"""
+    alert = g.db.query(Alert).filter(Alert.id == alert_id).first()
+    if not alert:
+        return None, jsonify({"error": "not_found"}), 404
+    inst = g.db.query(AIInstance).filter(
+        AIInstance.id == alert.ai_instance_id,
+        AIInstance.user_id == g.user.id,
+    ).first()
+    if not inst:
+        return None, jsonify({"error": "forbidden"}), 403
+    return alert, None, None
+
+
+def _alert_dict(a):
+    return {
+        "id": a.id,
+        "ai_instance_id": a.ai_instance_id,
+        "drift_check_id": a.drift_check_id,
+        "severity": a.severity,
+        "status": a.status,
+        "message": a.message,
+        "resolution_note": a.resolution_note,
+        "created_at": a.created_at.isoformat() if a.created_at else None,
+        "resolved_at": a.resolved_at.isoformat() if a.resolved_at else None,
+    }
+
+
+@bp.route("/alerts")
+@require_auth
+def list_alerts():
+    """告警列表：分页 + severity/status 过滤"""
+    try:
+        page = max(int(request.args.get("page", 1)), 1)
+        size = min(max(int(request.args.get("size", 20)), 1), 100)
+    except ValueError:
+        return jsonify({"error": "invalid_page_or_size"}), 400
+    severity = request.args.get("severity", "")
+    status = request.args.get("status", "")
+    q = (
+        g.db.query(Alert)
+        .join(AIInstance, Alert.ai_instance_id == AIInstance.id)
+        .filter(AIInstance.user_id == g.user.id)
+    )
+    if severity:
+        q = q.filter(Alert.severity == severity)
+    if status:
+        q = q.filter(Alert.status == status)
+    total = q.count()
+    alerts = q.order_by(Alert.created_at.desc()).offset((page - 1) * size).limit(size).all()
+    return jsonify({
+        "total": total,
+        "page": page,
+        "size": size,
+        "items": [_alert_dict(a) for a in alerts],
+    })
+
+
+@bp.route("/alerts/<int:alert_id>")
+@require_auth
+def get_alert(alert_id):
+    """告警详情（含 baseline 快照关联）"""
+    alert, err, code = _get_owned_alert(alert_id)
+    if err:
+        return err, code
+    baseline = None
+    if alert.drift_check_id:
+        check = g.db.query(DriftCheck).filter(DriftCheck.id == alert.drift_check_id).first()
+        if check and check.baseline_answer_id:
+            ba = g.db.query(BaselineAnswer).filter(BaselineAnswer.id == check.baseline_answer_id).first()
+            if ba:
+                baseline = {"question_id": ba.question_id, "question_text": ba.question_text}
+    data = _alert_dict(alert)
+    data["baseline"] = baseline
+    return jsonify(data)
+
+
+@bp.route("/alerts/<int:alert_id>/ack", methods=["POST"])
+@require_auth
+def ack_alert_endpoint(alert_id):
+    """人工确认告警"""
+    alert, err, code = _get_owned_alert(alert_id)
+    if err:
+        return err, code
+    alert, changed, msg = ack_alert(g.db, alert)
+    if not changed:
+        return jsonify({"error": msg}), 400
+    g.db.commit()
+    return jsonify({"ok": True, "status": alert.status, "message": msg})
+
+
+@bp.route("/alerts/<int:alert_id>/resolve", methods=["POST"])
+@require_auth
+def resolve_alert_endpoint(alert_id):
+    """处理关闭告警（记录 resolution_note）"""
+    alert, err, code = _get_owned_alert(alert_id)
+    if err:
+        return err, code
+    note = (request.json or {}).get("resolution_note", "")
+    alert, changed, msg = resolve_alert(g.db, alert, note)
+    if not changed:
+        return jsonify({"error": msg}), 400
+    g.db.commit()
+    return jsonify({
+        "ok": True,
+        "status": alert.status,
+        "resolution_note": alert.resolution_note,
+        "message": msg,
+    })
+
+
+# ========== M2 P-CODE-002: Webhook 配置 CRUD（v0.2.1 接口先行） ==========
+
+@bp.route("/alert-webhooks")
+@require_auth
+def list_webhooks():
+    hooks = (
+        g.db.query(AlertWebhook)
+        .join(AIInstance, AlertWebhook.ai_instance_id == AIInstance.id)
+        .filter(AIInstance.user_id == g.user.id)
+        .all()
+    )
+    return jsonify({"items": [{
+        "id": h.id,
+        "ai_instance_id": h.ai_instance_id,
+        "url": h.url,
+        "events": json.loads(h.events) if isinstance(h.events, str) else h.events,
+        "enabled": h.enabled,
+        "created_at": h.created_at.isoformat() if h.created_at else None,
+    } for h in hooks]})
+
+
+@bp.route("/alert-webhooks", methods=["POST"])
+@require_auth
+def create_webhook():
+    data = request.json or {}
+    inst_id = data.get("ai_instance_id")
+    url = (data.get("url") or "").strip()
+    if not inst_id or not url:
+        return jsonify({"error": "ai_instance_id_and_url_required"}), 400
+    inst = g.db.query(AIInstance).filter(
+        AIInstance.id == inst_id, AIInstance.user_id == g.user.id
+    ).first()
+    if not inst:
+        return jsonify({"error": "not_found"}), 404
+    events = data.get("events", ["red", "yellow"])
+    hook = AlertWebhook(
+        ai_instance_id=inst_id,
+        url=url,
+        events=json.dumps(events) if not isinstance(events, str) else events,
+    )
+    g.db.add(hook)
+    g.db.commit()
+    return jsonify({"id": hook.id, "ok": True}), 201
+
+
+@bp.route("/alert-webhooks/<int:hook_id>", methods=["DELETE"])
+@require_auth
+def delete_webhook(hook_id):
+    hook = g.db.query(AlertWebhook).filter(AlertWebhook.id == hook_id).first()
+    if not hook:
+        return jsonify({"error": "not_found"}), 404
+    inst = g.db.query(AIInstance).filter(
+        AIInstance.id == hook.ai_instance_id, AIInstance.user_id == g.user.id
+    ).first()
+    if not inst:
+        return jsonify({"error": "forbidden"}), 403
+    g.db.delete(hook)
+    g.db.commit()
+    return jsonify({"ok": True})
