@@ -12,6 +12,35 @@ server:
   host: "0.0.0.0"
   port: 5052
 
+# M3 P-CODE-003：订阅计费（价格 / 限额 / trial / webhook 签名的权威来源）
+billing:
+  trial_days: 14
+  currency: "CNY"
+  webhook_secret: "polaris_dev_whsec_20260818"
+  plans:
+    free:
+      price_monthly: 0
+      quota:
+        detection: 100
+        snapshot: 10
+        alert_push: 5
+    pro:
+      price_monthly: 49
+      quota:
+        detection: 5000
+        snapshot: 500
+        alert_push: 200
+    enterprise:
+      price_monthly: 199
+      quota:
+        detection: 50000
+        snapshot: 5000
+        alert_push: 2000
+  overage_rate:
+    detection: 0.01
+    snapshot: 0.05
+    alert_push: 0.02
+
 logging:
   level: "INFO"
   polaris_log: "./polaris.log"

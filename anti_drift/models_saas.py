@@ -98,3 +98,17 @@ class UsageEvent(Base):
     event_type = Column(String(32), nullable=False)  # detection / snapshot / alert_push
     quantity = Column(Integer, default=1)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+
+
+class BillingCheckout(Base):
+    """支付结算会话（v0.3 · 模拟支付，接口契约先行）"""
+    __tablename__ = "billing_checkouts"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    plan = Column(String(16), nullable=False)          # free / pro / enterprise
+    amount = Column(Float, default=0.0)                 # 应付金额（本币）
+    currency = Column(String(8), default="CNY")
+    status = Column(String(16), default="open", index=True)  # open / paid / expired
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    paid_at = Column(DateTime, nullable=True)

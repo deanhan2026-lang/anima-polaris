@@ -91,6 +91,7 @@ tr:hover td { background: rgba(15, 52, 96, 0.2); }
       <a class="active" onclick="showPage('instances')" id="nav-instances">实例列表</a>
       <a onclick="showPage('create')" id="nav-create">创建实例</a>
       <a onclick="showPage('alerts')" id="nav-alerts">告警</a>
+      <a onclick="showPage('billing')" id="nav-billing">订阅</a>
     </div>
 
     <div id="page-instances">
@@ -118,6 +119,17 @@ tr:hover td { background: rgba(15, 52, 96, 0.2); }
         <button class="secondary" onclick="loadAlerts()" style="padding:4px 12px">刷新</button>
       </div>
       <div id="alert-list"></div>
+    </div>
+
+    <div id="page-billing" class="hidden">
+      <h2>订阅计费</h2>
+      <div id="billing-status"></div>
+      <h3 class="mt-12">套餐</h3>
+      <div id="billing-plans" class="flex flex-wrap"></div>
+      <h3 class="mt-12">用量（当前周期）</h3>
+      <div id="billing-usage"></div>
+      <h3 class="mt-12">账单</h3>
+      <div id="billing-invoice"></div>
     </div>
 
     <div id="page-create" class="hidden">
@@ -211,8 +223,10 @@ function showPage(name) {
   document.getElementById("page-instances").classList.toggle("hidden", name !== "instances");
   document.getElementById("page-create").classList.toggle("hidden", name !== "create");
   document.getElementById("page-alerts").classList.toggle("hidden", name !== "alerts");
+  document.getElementById("page-billing").classList.toggle("hidden", name !== "billing");
   if (name === "instances") loadInstances();
   if (name === "alerts") loadAlerts();
+  if (name === "billing") loadBilling();
 }
 
 async function loadInstances() {
@@ -455,6 +469,159 @@ async function resolveAlert(id) {
   if (note === null) return;
   try { await api("POST", `/alerts/${id}/resolve`, { resolution_note: note }); loadAlerts(); }
   catch (e) { alert(e.message); }
+}
+
+// ── M3 P-CODE-003：订阅计费 ──
+const STATUS_BADGE = { trial: "badge-yellow", active: "badge-green", canceled: "badge-gray", expired: "badge-red" };
+const PLAN_NAMES = { free: "免费版", pro: "专业版", enterprise: "企业版" };
+
+let _billingState = null;
+
+async function loadBilling() {
+  const statusEl = document.getElementById("billing-status");
+  const plansEl = document.getElementById("billing-plans");
+  const usageEl = document.getElementById("billing-usage");
+  const invEl = document.getElementById("billing-invoice");
+  [statusEl, plansEl, usageEl, invEl].forEach(el => el.innerHTML = "<p class='text-sm'>加载中...</p>");
+  try {
+    const [subRes, plansRes, usageRes, invRes] = await Promise.all([
+      api("GET", "/billing/subscription"),
+      api("GET", "/billing/plans"),
+      api("GET", "/billing/usage/summary"),
+      api("GET", "/billing/invoices"),
+    ]);
+    _billingState = { sub: subRes.subscription, plans: plansRes.plans, usage: usageRes, inv: invRes };
+    renderBillingStatus(statusEl, _billingState);
+    renderBillingPlans(plansEl, _billingState);
+    renderBillingUsage(usageEl, _billingState);
+    renderBillingInvoice(invEl, _billingState);
+  } catch (e) {
+    statusEl.innerHTML = "<p class='text-sm' style='color:#e94560'>加载失败: " + esc(e.message) + "</p>";
+  }
+}
+
+function renderBillingStatus(el, st) {
+  const sub = st.sub;
+  if (!sub) {
+    el.innerHTML = `<div class="card"><p class="text-sm">当前无订阅，请选择下方套餐开通（默认 14 天免费试用）。</p></div>`;
+    return;
+  }
+  const planName = PLAN_NAMES[sub.plan] || sub.plan;
+  const price = (st.plans[sub.plan] || {}).price_monthly || 0;
+  el.innerHTML = `
+    <div class="card">
+      <div class="flex justify-between">
+        <div>
+          <span class="badge ${STATUS_BADGE[sub.status] || "badge-gray"}">${esc(sub.status)}</span>
+          <strong class="ml-8">${planName}（${esc(sub.plan)}）</strong>
+          <span class="text-sm ml-8">¥${price}/月</span>
+        </div>
+        <div class="flex">
+          ${sub.status === "active" || sub.status === "trial" ? `<button class="secondary" onclick="mockPayCurrent()" style="padding:4px 12px;font-size:12px">模拟续费</button>` : ""}
+          ${sub.status === "active" || sub.status === "trial" ? `<button class="danger" onclick="cancelSubscription()" style="padding:4px 12px;font-size:12px">取消订阅</button>` : ""}
+        </div>
+      </div>
+      <div class="text-sm mt-8">周期: ${sub.current_period_start ? sub.current_period_start.slice(0, 10) : "—"} ~ ${sub.current_period_end ? sub.current_period_end.slice(0, 10) : "—"}</div>
+    </div>`;
+}
+
+function renderBillingPlans(el, st) {
+  const cur = st.sub ? st.sub.plan : null;
+  el.innerHTML = Object.entries(st.plans).map(([name, p]) => {
+    const quotaText = Object.entries(p.quota || {}).map(([k, v]) => `${k} ${v}`).join(" · ");
+    const isCur = name === cur;
+    const btn = isCur
+      ? `<button class="secondary" disabled style="opacity:0.6;cursor:default">当前套餐</button>`
+      : `<button onclick="selectPlan('${name}')">${cur ? "切换到此套餐" : "免费试用并选择"}</button>`;
+    return `
+      <div class="card grow" style="min-width:200px;${isCur ? "border-color:#e94560" : ""}">
+        <h3>${PLAN_NAMES[name] || name} <span class="text-sm">(${esc(name)})</span></h3>
+        <div class="text-sm">¥${p.price_monthly}/月</div>
+        <div class="text-sm mt-8">${esc(quotaText)}</div>
+        <div class="mt-12">${btn}</div>
+      </div>`;
+  }).join("");
+}
+
+function renderBillingUsage(el, st) {
+  const items = st.usage.items || [];
+  if (!items.length) { el.innerHTML = "<p class='text-sm'>暂无用量</p>"; return; }
+  el.innerHTML = `<div class="card">
+    ${items.map(i => {
+      const pct = i.quota ? Math.min(100, Math.round(i.used / i.quota * 100)) : 0;
+      const over = i.over_limit ? `<span class="badge badge-red ml-8">超限 ${i.over}</span>` : "";
+      return `
+        <div class="mb-8">
+          <div class="flex justify-between">
+            <span>${esc(i.event_type)}</span>
+            <span class="text-sm">${i.used} / ${i.quota === null ? "∞" : i.quota}${over}</span>
+          </div>
+          <div style="height:8px;background:#0f3460;border-radius:4px;margin-top:4px">
+            <div style="height:8px;width:${pct}%;background:${i.over_limit ? "#e94560" : "#a5d6a7"};border-radius:4px"></div>
+          </div>
+        </div>`;
+    }).join("")}
+    ${st.usage.overall_over_limit ? `<p class="text-sm mt-8" style="color:#e94560">当前周期已超限，超额部分将按 overage 计费</p>` : ""}
+  </div>`;
+}
+
+function renderBillingInvoice(el, st) {
+  const cur = st.inv.current;
+  let html = `<div class="card">
+    <div class="flex justify-between">
+      <span>套餐费（${esc(cur.plan)}）</span><span>${cur.currency} ${cur.base_amount}</span>
+    </div>`;
+  cur.line_items.filter(i => i.overage_amount > 0).forEach(i => {
+    html += `<div class="flex justify-between text-sm">
+      <span>超额 ${esc(i.event_type)} × ${i.over}</span><span>${cur.currency} ${i.overage_amount}</span>
+    </div>`;
+  });
+  html += `<div class="flex justify-between mt-8" style="border-top:1px solid #0f3460;padding-top:8px">
+      <strong>合计</strong><strong>${cur.currency} ${cur.total_amount}</strong>
+    </div>
+  </div>`;
+  if (st.inv.history.length) {
+    html += `<div class="text-sm mt-8">历史支付:</div>` + st.inv.history.map(h =>
+      `<div class="text-sm">#${h.checkout_id} · ${PLAN_NAMES[h.plan] || h.plan} · ${h.currency} ${h.amount} · ${h.paid_at ? h.paid_at.slice(0, 10) : ""}</div>`
+    ).join("");
+  }
+  el.innerHTML = html;
+}
+
+async function selectPlan(plan) {
+  if (!_billingState) return;
+  if (_billingState.sub && _billingState.sub.plan === plan) return;
+  const action = _billingState.sub ? "change" : "subscribe";
+  if (!confirm(action === "change" ? `确认切换到 ${PLAN_NAMES[plan] || plan}？` : `开通 ${PLAN_NAMES[plan] || plan}（14 天免费试用）？`)) return;
+  try {
+    if (action === "subscribe") {
+      await api("POST", "/billing/subscription", { plan });
+      // 创建后走一次模拟支付，直接进入 active（演示闭环）
+      const co = await api("POST", "/billing/checkout", { plan });
+      await api("POST", "/billing/mock-pay/" + co.checkout.id);
+    } else {
+      await api("POST", "/billing/subscription/change", { plan });
+    }
+    loadBilling();
+  } catch (e) { alert("操作失败: " + e.message); }
+}
+
+async function mockPayCurrent() {
+  if (!_billingState || !_billingState.sub) return;
+  try {
+    const co = await api("POST", "/billing/checkout", { plan: _billingState.sub.plan });
+    await api("POST", "/billing/mock-pay/" + co.checkout.id);
+    alert("模拟支付成功，订阅已续期");
+    loadBilling();
+  } catch (e) { alert("支付失败: " + e.message); }
+}
+
+async function cancelSubscription() {
+  if (!confirm("确认取消订阅？当前周期结束后将过期。")) return;
+  try {
+    await api("POST", "/billing/subscription/cancel", {});
+    loadBilling();
+  } catch (e) { alert("取消失败: " + e.message); }
 }
 
 if (getToken()) enterMain();

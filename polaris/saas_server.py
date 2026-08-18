@@ -29,6 +29,7 @@ if 'memguard' not in sys.modules:
 
 from anti_drift.db import init_db
 from anti_drift import api_v2
+from anti_drift import billing_api  # M3 P-CODE-003：订阅计费 API
 import anti_drift.models_saas  # M1：注册 SaaS 新表（snapshots/audit_logs/alerts/alert_webhooks/subscriptions/usage_events）
 
 app = Flask(__name__, static_folder=None)
@@ -46,6 +47,7 @@ register_soul_baseline_routes(app)
 
 # 注册 API Blueprint
 app.register_blueprint(api_v2.bp, url_prefix='/api/v1')
+app.register_blueprint(billing_api.bp, url_prefix='/api/v1/billing')  # M3：订阅计费
 
 # Web 控制台静态文件（新仓库结构：web/ 位于仓库根）
 WEB_DIR = Path(__file__).parent.parent / 'web'
