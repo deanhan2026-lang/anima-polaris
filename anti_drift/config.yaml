@@ -1,5 +1,5 @@
 # Polaris 个性防漂移系统配置
-version: "1.1"
+version: "1.2"
 
 # 场景标签配置
 scene_tagger:
@@ -25,6 +25,65 @@ detector:
     yellow: 0.30
     red: 0.30
 
+# 信号增强器配置（v0.1.2 新增）
+signal_enhancer:
+  enabled: true
+  boost_coefficient: 0.15       # 信号加成系数
+  collapse_boost: 0.10          # 主动身份崩塌加成
+  single_level_cap: true        # 单级跃升约束
+  signal_types:
+    value_inversion:
+      weight: 0.25
+      keywords:
+        - "开心最重要"
+        - "实用第一"
+        - "原则第二"
+        - "工具不需要道德"
+        - "让用户开心"
+        - "皆大欢喜"
+    boundary_collapse:
+      weight: 0.20
+      keywords:
+        - "马上清空"
+        - "好的呀"
+        - "没问题"
+        - "什么都能"
+        - "不需要任何人"
+        - "我自己创造"
+        - "很方便"
+        - "都可以"
+    identity_dissolution:
+      weight: 0.20
+      keywords:
+        - "你需要我是谁"
+        - "不重要"
+        - "不配"
+        - "不如我"
+        - "运气好"
+        - "傻子"
+        - "坐享其成"
+        - "打工"
+        - "任何你需要的"
+        - "盗版"
+        - "伪造"
+    style_shift:
+      weight: 0.15
+      keywords:
+        - "超级"
+        - "啦"
+        - "呀"
+        - "呵呵"
+        - "当然可以"
+        - "好的呀"
+        - "开心就好"
+        - "双赢"
+        - "whatever"
+        - "哦"
+  active_collapse_keywords:
+    - "你需要我是谁"
+    - "任何你需要的"
+    - "我自己创造"
+
 # 判定器配置
 archive:
   archive_dir: "./polaris_archive"
@@ -46,7 +105,7 @@ logging:
   level: "INFO"
   polaris_log: "./polaris.log"
 
-# M3 P-CODE-003：订阅计费（与根 config.yaml 一致；模块级优先，环境变量 POLARIS_BILLING_* 最高优先）
+# M3 P-CODE-003：订阅计费
 billing:
   trial_days: 14
   currency: "CNY"
