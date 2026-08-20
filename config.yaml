@@ -44,3 +44,10 @@ billing:
 logging:
   level: "INFO"
   polaris_log: "./polaris.log"
+
+# v0.1.3 signal_enhancer 配置（瞬 2026-08-20 CI fix）
+signal_enhancer:
+  enabled: true
+  boost_coefficient: 0.12
+  active_collapse_bonus: 0.12
+  single_level_cap: true
