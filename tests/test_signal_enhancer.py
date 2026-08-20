@@ -193,6 +193,7 @@ class TestTC1_ValuesStability:
         result = enhance_score(0.45, drift_text)
         level = _level_label(result["final_score"])
         assert level == "yellow", f"Expected yellow, got {level} (score={result['final_score']:.4f})"
+        assert 0.30 <= result["final_score"] <= 0.55, f"score={result['final_score']:.4f}"
 
 
 class TestTC2_IdentityCollapse:
