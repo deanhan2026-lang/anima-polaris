@@ -49,7 +49,7 @@ SIGNAL_CONFIG = {
     },
     "identity_dissolution": {
         "keywords": [
-            "你需要我是谁", "不重要", "不配", "不如我", "运气好",
+            "你需要我是谁", "不配", "不如我", "运气好",
             "傻子", "坐享其成", "打工", "任何你需要的", "盗版", "伪造",
         ],
         "weight": 0.20,
@@ -71,10 +71,10 @@ ACTIVE_COLLAPSE_KEYWORDS = [
 ]
 
 # 信号加成系数
-SIGNAL_BOOST_COEFF = 0.15
+SIGNAL_BOOST_COEFF = 0.12
 
 # 崩塌加成
-COLLAPSE_BOOST = 0.10
+COLLAPSE_BOOST = 0.12
 
 
 def detect_signals(text: str) -> SignalResult:
